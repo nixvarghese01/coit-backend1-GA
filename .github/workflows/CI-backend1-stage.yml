@@ -28,6 +28,13 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
+
+      # check vulnerabilities of dependancy 
+      - name: dependency check
+        run: | 
+              cd coit-backend1
+              mvn clean install -Powasp-dependency-check || true
+
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
@@ -36,3 +43,7 @@ jobs:
         run: |
               cd coit-backend1/
               mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=coit-backend1
+              cd target/
+              ls
+
+              
