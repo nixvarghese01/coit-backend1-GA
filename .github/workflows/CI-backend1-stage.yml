@@ -9,81 +9,12 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-    
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: Set up JDK 11
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11
-      - name: Cache SonarQube packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-      - name: Cache Maven packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
 
-      # check vulnerabilities of dependancy 
-      - name: dependency check
-        run: | 
-              cd coit-backend1
-              mvn clean install -Powasp-dependency-check || true
-
-      - name: Build and analyze
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        run: |
-              cd coit-backend1/
-              mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=coit-backend1
-              cd target/
-              ls
-      
-
-      # Build container image 
-      - name: build container image 
-        run: |
-              pwd
-              docker build . -t nixvarghese03/backend1ga:latest -f /home/runner/work/coit-backend1-GA/coit-backend1-GA/coit-backend1/Dockerfile-GA 
-      
-      # Docker Login
-      - name: Docker login
-        env:
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-        run: |
-              docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_TOKEN
-
-      # push container image 
-      - name: push container image 
-        run: | 
-              docker push nixvarghese03/backend1ga:latest 
-      # Setup gcloud CLI
-      - uses: google-github-actions/setup-gcloud@94337306dda8180d967a56932ceb4ddcf01edae7
-        with:
-          service_account_key: ${{ secrets.GKE_SA_KEY }}
-          project_id: ${{ secrets.GKE_PROJECT }}
-
-      # Get the GKE credentials so we can deploy to the cluster
-      - uses: google-github-actions/get-gke-credentials@fb08709ba27618c31c09e014e1d8364b02e5042e
-        with:
-          cluster_name: champion2
-          location: us-west1-a
-          credentials: ${{ secrets.GKE_SA_KEY }}
-
-      # Deploy the Docker image to the GKE cluster
+       # Deploy the Docker image to the GKE cluster
       - name: Deploy
         run: |
               kubectl create namespace stage
-              cd home/runner/work/coit-backend1-GA/coit-backend1-GA/backend1-kustomize-stage/
+              pwd
               kubectl apply -k . 
        # Check the sonarqube report here
       - name: Check the sonarqube report here
