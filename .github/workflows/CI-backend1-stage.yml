@@ -25,8 +25,10 @@ jobs:
       - name: Deploy
         run: |
               kubectl create namespace stage
-              git clone https://github.com/nixvarghese01/coit-backend1-GA.git
               pwd 
+
+              ls -la  
+
               kubectl apply -k . 
        # Check the sonarqube report here
       - name: Check the sonarqube report here
