@@ -45,20 +45,22 @@ jobs:
               mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=coit-backend1
               cd target/
               ls
+      
+
+      # Build container image 
+      - name: build container image 
+        run: |
+              pwd
+              docker build . -t nixvarghese03/backend1ga:latest -f /home/runner/work/coit-backend1-GA/coit-backend1-GA/coit-backend1/Dockerfile-GA
+      
       # Docker Login
       - name: Docker login
         env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
         run: |
-      
               docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_TOKEN
 
-      # Build container image 
-      - name: build container image 
-        run: |
-              pwd
-              docker build -f /home/runner/work/coit-backend1-GA/coit-backend1-GA/coit-backend1/Dockerfile-GA -t nixvarghese03/backend1ga .
       # push container image 
       - name: push container image 
         run: | 
