@@ -24,12 +24,9 @@ jobs:
        # Deploy the Docker image to the GKE cluster
       - name: Deploy
         run: |
-              kubectl create namespace stage
-              pwd 
-
+              
               ls -la  
 
-              kubectl apply -k . 
        # Check the sonarqube report here
       - name: Check the sonarqube report here
         run: | 
