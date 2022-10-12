@@ -30,6 +30,7 @@ jobs:
       - name: Deploy
         run: |
               
+               cd backend1-kustomize-stage
                pwd 
                 
                 
