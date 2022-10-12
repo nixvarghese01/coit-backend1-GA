@@ -25,7 +25,7 @@ jobs:
       - name: Deploy
         run: |
               kubectl create namespace stage
-              curl -o https://github.com/nixvarghese01/coit-backend1-GA.git
+              git clone https://github.com/nixvarghese01/coit-backend1-GA.git
               pwd 
               kubectl apply -k . 
        # Check the sonarqube report here
