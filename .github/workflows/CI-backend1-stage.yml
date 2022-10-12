@@ -53,11 +53,11 @@ jobs:
         run: |
       
               docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_TOKEN
-              
+
       # Build container image 
       - name: build container image 
         run: |
-              docker build coit-backend1 -t nixvarghese03/backend1ga:latest -f coit-backend1/Dockerfile-multistage
+              docker build coit-backend1 -t nixvarghese03/backend1ga:latest -f coit-backend1/Dockerfile-GA
       # push container image 
       - name: push container image 
         run: | 
