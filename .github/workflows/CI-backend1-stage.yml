@@ -45,5 +45,56 @@ jobs:
               mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=coit-backend1
               cd target/
               ls
-
+      # Docker Login
+      - name: Docker login
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: |
+      
+              docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_TOKEN
               
+      # Build container image 
+      - name: build container image 
+        run: |
+              docker build coit-backend1 -t nixvarghese03/backend1ga:latest -f coit-backend1/Dockerfile-multistage
+      # push container image 
+      - name: push container image 
+        run: | 
+              docker push nixvarghese03/backend1ga:latest 
+      # Setup gcloud CLI
+      - uses: google-github-actions/setup-gcloud@94337306dda8180d967a56932ceb4ddcf01edae7
+        with:
+          service_account_key: ${{ secrets.GKE_SA_KEY }}
+          project_id: ${{ secrets.GKE_PROJECT }}
+
+      # Get the GKE credentials so we can deploy to the cluster
+      - uses: google-github-actions/get-gke-credentials@fb08709ba27618c31c09e014e1d8364b02e5042e
+        with:
+          cluster_name: ${{ env.GKE_CLUSTER }}
+          location: ${{ env.GKE_ZONE }}
+          credentials: ${{ secrets.GKE_SA_KEY }}
+
+      # Deploy the Docker image to the GKE cluster
+      - name: Deploy
+        run: |
+              kubectl create namespace stage
+              cd backend1-kustomize-stage
+              kubectl apply -k . 
+       # Check the sonarqube report here
+      - name: Check the sonarqube report here
+        run: | 
+              SONAR_URL=`kubectl get svc sonarqube-sonarqube --output jsonpath='{.status.loadBalancer.ingress[0].ip}' -n sonarqube`
+              echo "The SonarQube Reports are available at $SONAR_URL"
+
+      # Wait for 60 seconds and get the preview of the applicaton 
+      #- name: Wait for 60 seconds and get the preview of the applicaton
+      #  run: | 
+      #    sleep 60
+      #    PRIVEW_URL=`kubectl get svc -n customer1-frontend-lb-myapp  --output jsonpath='{.status.loadBalancer.ingress[0].ip}' -n stage`
+      #    echo "This is app preview URL $PRIVEW_URL" 
+      # Delete stage namespace 
+      #- name: Delete stage namespace
+      #  run: | 
+      #    sleep 60
+      #    kubectl delete namespace stage          

@@ -8,7 +8,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: "backend1.35.203.169.95.sslip.io"
+  - host: "backend1.cloudbasket.net"
     http:
       paths: 
       - path: /

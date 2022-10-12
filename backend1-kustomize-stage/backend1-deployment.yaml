@@ -21,7 +21,7 @@ spec:
         app: backend1
     spec:
       containers:
-      - image: nixvarghese03/backend01:v0
+      - image: nixvarghese03/backend1ga:latest
         imagePullPolicy: IfNotPresent
         name: backend1   
         ports:
