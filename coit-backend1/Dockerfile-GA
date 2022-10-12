@@ -1,3 +1,8 @@
+FROM maven:3.8.4-amazoncorretto-8 AS build
+WORKDIR /usr/app
+COPY . /usr/app
+RUN mvn install
+
 FROM gcr.io/distroless/java11-debian11
 # Environment Variable that defines the endpoint of sentiment-analysis python api.
 ENV SA_LOGIC_API_URL http://localhost:5000
