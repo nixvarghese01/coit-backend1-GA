@@ -58,7 +58,7 @@ jobs:
       - name: build container image 
         run: |
               pwd
-              docker build -f /home/runner/work/coit-backend1-GA/coit-backend1-GA/Dockerfile-GA -t $DOCKERHUB_USERNAME/backend1ga .
+              docker build -f /home/runner/work/coit-backend1-GA/coit-backend1-GA/Dockerfile-GA -t nixvarghese03/backend1ga:latest .
       # push container image 
       - name: push container image 
         run: | 
