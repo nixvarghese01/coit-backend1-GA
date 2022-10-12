@@ -25,8 +25,8 @@ jobs:
       - name: Deploy
         run: |
               kubectl create namespace stage
-              pwd
-              cd backend1-kustomize-stage
+              cat /home/runner/work/coit-backend1-GA/coit-backend1-GA/backend1-kustomize-stage/kustomization.yaml
+              ls
               kubectl apply -k . 
        # Check the sonarqube report here
       - name: Check the sonarqube report here
