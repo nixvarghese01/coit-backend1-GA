@@ -31,9 +31,8 @@ jobs:
         run: |
               
                cd backend1-kustomize-stage
-               pwd 
-                
-                
+               kubectl create namespace stage 
+               kubectl apply -f .
 
        # Check the sonarqube report here
       - name: Check the sonarqube report here
