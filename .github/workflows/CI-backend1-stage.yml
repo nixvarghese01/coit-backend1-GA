@@ -58,7 +58,7 @@ jobs:
       - name: build container image 
         run: |
               pwd
-              docker build -t nixvarghese03/backend1ga:latest . 
+              docker build -t nixvarghese03/backend1ga:latest -f /home/runner/work/coit-backend1-GA/coit-backend1-GA/Dockerfile-GA
       # push container image 
       - name: push container image 
         run: | 
